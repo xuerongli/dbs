@@ -1,0 +1,48 @@
+MongoDB 4.0.0 远程连接及用户名密码认证登陆配置——windows
+
+MongoDB 设置用户名密码登录
+
+MongoDB 默认直接连接，无须身份验证。
+Mongodb 端口（默认 27017）
+
+1、创建管理员账户并赋予权限
+打开cmd,输入mongo,进入mongodb的命令页面
+
+
+> use admin #进入admin数据库
+switched to db admin
+
+
+> db.createUser(
+   {user:"admin",
+    pwd:"admin",
+    roles:[{role:"root", db:"admin"}]
+    }
+   ）
+
+# 创建用户、密码
+角色：roles:[{role:"角色名“， db:"角色所属数据库”}， {role:"角色名2“， db:"角色所属数据库2”}，.....]
+角色的具体功能描述见：https://docs.mongodb.com/manual/core/security-built-in-roles/
+
+注意：The admin database is unique in MongoDB. Users with normal access to the admin database have read and write access to all databases.
+
+2、修改配置文档mongod.cfg（位置：安装目录\bin 下）
+将bind_ip改为0.0.0.0 （让其他机器可访问，用于远程连接，如果bind_ip是127.0.0.1的话，就只能本地访问）
+
+找到 #security：改成下图所示，开启安全认证
+security：
+  authorization: enabled
+  
+3、重启MogoDB Service服务，启用认证。
+验证登录
+cmd
+mongo
+>use admin
+>db.auth("admin","admin")
+>show dbs
+
+认证登录成功。
+
+
+
+
