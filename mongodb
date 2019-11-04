@@ -43,6 +43,53 @@ mongo
 
 认证登录成功。
 
+4、操作
+# 查看已存在的用户
+>use admin
+>db.system.users.find()
+# 删除用户
+>db.system.users.remove({user: "user002"})
+
+# 创建普通用户
+use foo
+db.createUser({
+  user: "user002",
+  pwd: "pwd002",
+  roles: [{ role: "readWrite", db: "foo"}]
+})
+
+# 
+use admin
+db.createUser(
+  {
+    user: "myUserAdmin",
+    pwd: "abc123",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+  }
+)
+
+
+5、URI 访问
+mongodb://your.db.ip.address:27017/foo
+# 添加用户名密码验证
+mongodb://simpleUser:simplePass@your.db.ip.address:27017/foo
+
+========================
+
+内置角色--》
+read	提供读取所有非系统的集合（数据库）
+readWrite	提供读写所有非系统的集合（数据库）和读取所有角色的所有权限
+dbAdmin	提供执行管理任务的功能，例如与架构相关的任务，索引编制，收集统计信息。此角色不授予用户和角色管理权限。
+dbOwner	提供对数据库执行任何管理操作的功能。此角色组合了readWrite，dbAdmin和userAdmin角色授予的权限。
+userAdmin	提供在当前数据库上创建和修改角色和用户的功能。由于userAdmin角色允许用户向任何用户（包括他们自己）授予任何权限，因此该角色还间接提供对数据库的超级用户访问权限，或者，如果作用于管理数据库，则提供对群集的访问权限。
+clusterAdmin	提供最佳的集群管理访问。此角色组合了clusterManager，clusterMonitor和hostManager角色授予的权限。此外，该角色还提供了dropDatabase操作。
+readAnyDatabase	仅在admin 数据库中使用，提供所有数据库的读权限。
+readWriteAnyDatabase	尽在admin 数据库中使用，提供所有数据库的读写权限
+userAdminAnyDatabase	尽在admin 数据库中使用，提供与userAdmin相同的用户管理操作访问权限，允许用户向任何用户（包括他们自己）授予任何权限，因此该角色还间接提供超级用户访问权限。
+dbAdminAnyDatabase	仅在admin 数据库中使用，提供与dbAdmin相同的数据库管理操作访问权限，该角色还在整个群集上提供listDatabases操作。
+root	尽在admin 数据库中使用，提供超级权限
+
+
 
 
 
