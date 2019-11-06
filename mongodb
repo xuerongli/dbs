@@ -50,6 +50,9 @@ mongo
 # 删除用户
 >db.system.users.remove({user: "user002"})
 
+# 修改用户密码
+>db.changeUserPassword('username', 'newPassword')
+
 # 创建普通用户
 use foo
 db.createUser({
@@ -68,6 +71,13 @@ db.createUser(
   }
 )
 
+# 指定加密机制
+db.createUser({
+user:"todo",
+pwd:"todo123",
+roles:[{role:"readWrite", db:"todo"}],
+mechanisms:["SCRAM-SHA-1"]
+})
 
 5、URI 访问
 mongodb://your.db.ip.address:27017/foo
